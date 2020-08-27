@@ -2,7 +2,7 @@
 /**
 	* WP eCommerce Nochex Payment Module
 	* @author Nochex Ltd
-	* @version 2.1
+	* @version 2.2
  	* @package wp-e-commerce
  	* @subpackage wpsc-merchants
 */
@@ -15,14 +15,12 @@ $nzshpcrt_gateways[$num] = array(
 	'display_name' => 'Nochex',
 	'requirements' => array(
 		/// so that you can restrict merchant modules to PHP 5, if you use PHP 5 features
-		'php_version' => 4.3,
+		'php_version' => 5.6,
 		 /// for modules that may not be present, like curl
 		'extra_modules' => array()
 	),
-
 	// this may be legacy, not yet decided
 	'internalname' => 'wpsc_merchant_nochex_standard',
-
 	// All array members below here are legacy, and use the code in nochex_multiple.php
 	'form' => 'form_nochex_multiple',
 	'submit_function' => 'submit_nochex_multiple',
@@ -101,53 +99,9 @@ class wpsc_merchant_nochex_standard extends wpsc_merchant {
 		$nochex_vars = array();
 		$add_tax = ! wpsc_tax_isincluded();
 
-		
-		$notify_url = $this->cart_data['notification_url'];
+			$notify_url = $this->cart_data['notification_url'];
 			$notify_url = add_query_arg('gateway', 'wpsc_merchant_nochex_standard', $notify_url);
 			$notify_url = apply_filters('wpsc_nochex_standard_notify_url', $notify_url);
-	/*			
-	
-
-		
-		$nochex_billing = get_option('nochex_billing');
-		
-		
-		// APC data
-			
-			
-			$callback_url = $notify_url;
-
-	
-			$free_shipping = false;
-			if ( isset( $_SESSION['coupon_numbers'] ) ) {
-				$coupon = new wpsc_coupons( $_SESSION['coupon_numbers'] );
-				$free_shipping = $coupon->is_percentage == '2';
-			}
-
-			if ( $this->cart_data['has_discounts'] && $free_shipping ){
-				$handling = 0;
-			}else{
-			
-				$handling = $this->cart_data['base_shipping'];
-			}
-			
-			$nochex_postage = get_option('nochex_postage');
-			
-			// Stick the cart item values together here
-			//$i = 1;
-			
-			$nochex_description = get_option('nochex_xml');
-		
-			if ($nochex_description == 1) {
-			$xmlCollect = '<items>';
-			
-			foreach ($this->cart_items as $cart_row) {
-				$xmlCollect .= '<item><id>'. $cart_row['product_id'] .'</id><name>'. $cart_row['name'] .'</name><description>'. $cart_row['name']  .'</description><quantity>'. $cart_row['quantity'] .'</quantity><price>'. $this->convert($cart_row['price']) .'</price></item>';
-				
-			}
-			
-			$xmlCollect .= '</items>';
-			}*/
 			
 			if(get_option('nochex_test') == 1){
 			$nochex_test = "100";
@@ -155,7 +109,7 @@ class wpsc_merchant_nochex_standard extends wpsc_merchant {
 			$nochex_test = "";
 			}
 			
-			if ($nochex_billing == 1) {
+			if (get_option('nochex_billing') == 1) {
 			$hide_billing_details = 'true';			
 			}else{
 			$hide_billing_details = 'false';
@@ -175,13 +129,14 @@ class wpsc_merchant_nochex_standard extends wpsc_merchant {
 				$handling = $this->cart_data['base_shipping'];
 			}
 			
-			if($nochex_postage == 1){
+			if(get_option('nochex_postage') == 1){
 			// Set base shipping
 			$postage = $handling;
 			$amount = $this->cart_data['total_price'] - $handling;
 			
 			}else{
 			$amount = $this->cart_data['total_price'];
+			$postage = 0;
 			}
 			
 			
@@ -227,19 +182,14 @@ class wpsc_merchant_nochex_standard extends wpsc_merchant {
 				<input type="hidden" name="callback_url" value="'.$notify_url.'" />				
 				<input type="hidden" name="cancel_url" value="'.$this->cart_data['transaction_results_url'].'" />
 				<input type="hidden" name="test_transaction" value="'.$nochex_test.'" />
+				<input type="hidden" name="optional_2" value="Callback" />
 				<input type="hidden" name="hide_billing_details" value="'.$hide_billing_details.'" />
 				<input type="hidden" name="test_success_url" value="'.add_query_arg('sessionid', $this->cart_data['session_id'], $this->cart_data['transaction_results_url']).'" />
 				<input type="submit" class="button-alt" id="submit_nochex_payment_form" value="Continue to Payment" /> 
 				</form> 
-			<script type="text/javascript">
-		
+				<script type="text/javascript">
 					document.getElementById("nochex_payment_form").submit();
-			</script>';
-		
-	
-		
-		
-		 
+				</script>';
 	}
 
 	/**
@@ -247,28 +197,8 @@ class wpsc_merchant_nochex_standard extends wpsc_merchant {
 	* @access public
 	*/
 	function submit() {
-		/*$name_value_pairs = array();
-		foreach ($this->collected_gateway_data as $key => $value) {
-			$name_value_pairs[] = $key . '=' . urlencode($value);
-		}
-		$gateway_values =  implode('&', $name_value_pairs);
-
-		$redirect = "https://secure.nochex.com/?".$gateway_values;
-		// URLs up to 2083 characters long are short enough for an HTTP GET in all browsers.
-		// Longer URLs require us to send aggregate cart data to Nochex short of losing data.
-		if (strlen($redirect) > 2083) {
-			$name_value_pairs = array();
-			foreach($this->_construct_value_array(true) as $key => $value) {
-				$name_value_pairs[]= $key . '=' . urlencode($value);
-			}
-			$gateway_values =  implode('&', $name_value_pairs);
-
-			$redirect = "https://secure.nochex.com/?".$gateway_values;
-		}*/
-		
 		
 		 echo $this->_construct_value_array();
-		
 	
 	}
 
@@ -278,6 +208,64 @@ class wpsc_merchant_nochex_standard extends wpsc_merchant {
 	* @access private
 	*/
 	function parse_gateway_notification() {
+	
+	if ($_POST["optional_2"] == "Callback") {
+	
+	// Set parameters for the email
+
+		$received_values = array();
+  		$received_values += stripslashes_deep ($_POST);
+		
+		$postvars = http_build_query($_POST);
+		
+		$url = "https://secure.nochex.com/callback/callback.aspx";
+		$ch = curl_init ();
+		curl_setopt ($ch, CURLOPT_URL, $url);
+		curl_setopt ($ch, CURLOPT_POST, true);
+		curl_setopt ($ch, CURLOPT_POSTFIELDS, $postvars);
+		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$response = curl_exec ($ch);
+		curl_close ($ch);
+
+		if($_POST["transaction_status"] == "100"){
+		$testStatus = "Test"; 
+		}else{
+		$testStatus = "Live";
+		}
+		
+		$received_values['response'] = $response;
+		
+		$debug_filename = dirname(__FILE__). "/nochex_debug.txt";
+		$debug_mode = get_option('nochex_debug');
+		switch($debug_mode){
+		// Off
+		case 0:
+			default:
+			break;
+		
+		// Log File
+		case 1:
+			$msg = date('l jS F Y g:ia') . " ==> Callback " . $response . ", Return Values:" . "\n";
+			foreach ($received_values as $key => $value) {
+				$msg .= "[" . $key . "] = "  . $value . "\n";
+			}
+			$msg .= "\n";
+			file_put_contents($debug_filename, $msg, FILE_APPEND);
+			break;
+		}
+		
+		if( 'AUTHORISED' == $response ) {
+			$this->nochex_apc_values = $received_values;
+			$this->session_id = $received_values['order_id'];
+		} else {
+			exit("APC Request Failure");
+		}
+		
+	
+	} else {
+	
 		/// Nochex first expects the APC variables to be returned to it within 30 seconds, so we do this first.
 		$nochex_url = "https://www.nochex.com/apcnet/apc.aspx";
 		$received_values = array();
@@ -286,18 +274,14 @@ class wpsc_merchant_nochex_standard extends wpsc_merchant {
 		$postvars = http_build_query($_POST);
 		// Curl code to post variables back
 		$ch = curl_init(); // Initialise the curl tranfer
-curl_setopt($ch, CURLOPT_URL, $nochex_url);
-curl_setopt($ch, CURLOPT_VERBOSE, true);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars); // Set POST fields
-curl_setopt($ch, CURLOPT_HTTPHEADER, "Host: www.nochex.com");
-curl_setopt($ch, CURLOPT_POSTFIELDSIZE, 0); 
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-curl_setopt($ch, CURLOPT_TIMEOUT, 60); // set connection time out variable - 60 seconds	
-$response = curl_exec($ch); // Post back
-curl_close($ch);
+		curl_setopt($ch, CURLOPT_URL, $nochex_url);
+		curl_setopt($ch, CURLOPT_VERBOSE, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars); // Set POST fields
+		$response = curl_exec($ch); // Post back
+		curl_close($ch);
 		
 		$received_values['response'] = $response;
 		
@@ -323,10 +307,11 @@ curl_close($ch);
 		if( 'AUTHORISED' == $response ) {
 			$this->nochex_apc_values = $received_values;
 			$this->session_id = $received_values['order_id'];
-
 		} else {
 			exit("APC Request Failure");
 		}
+	
+	}
 		
 	}
 
