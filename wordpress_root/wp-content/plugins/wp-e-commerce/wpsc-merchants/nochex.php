@@ -8,7 +8,7 @@
 */
 $nzshpcrt_gateways[$num] = array(
 	'name' => 'Nochex Secure Online Payments',
-	'api_version' => 2.1,
+	'api_version' => 2.2,
 	'image' => 'https://ssl.nochex.com/images/carts/paynochex.gif',
 	'class_name' => 'wpsc_merchant_nochex_standard',
 	'wp_admin_cannot_cancel' => true,
@@ -30,8 +30,6 @@ $nzshpcrt_gateways[$num] = array(
 		'option_name' => 'nochex_curcode'
 	)
 );
-
-
 
 /**
 	* WP eCommerce Nochex Standard Merchant Class
@@ -436,18 +434,18 @@ function form_nochex_multiple() {
 
 
   $output = "
-  <tr><td colspan='2'><br /></td></tr>
+  
   <tr>
-      <td width='150'>" . __( 'Merchant ID / Email Address:', 'wpsc' ) . "
+      <td width='150' style='padding-bottom: 0px;box-shadow:inherit;'><style>td{box-shadow:inherit!important;padding-bottom:5px!important}</style>" . __( 'Merchant ID / Email Address:', 'wpsc' ) . "
       </td>
-      <td>
+      <td style='padding-bottom: 0px;box-shadow:inherit;'>
       <input type='text' size='40' value='".get_option('nochex_merchant_id')."' name='nochex_merchant_id' />
   	<br /><small>
   	" . __( 'This is your Nochex email address.', 'wpsc' ) . "
   	</small>
   	</td>
   </tr>
-  <tr><td colspan='2'><br /></td></tr>";
+  ";
 
 	$nochex_order = get_option('nochex_order_status');
 	$statuses = '';
@@ -476,9 +474,9 @@ function form_nochex_multiple() {
 
 	$output .= "
 	<tr>
-     <td style='padding-bottom: 0px;'>Order Status Success:
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>Order Status Success:
      </td>
-     <td style='padding-bottom: 0px;'>
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>
 	  <select name='nochex_order_status' style='width:150px'>
       ".$statuses."
       </select>
@@ -486,7 +484,7 @@ function form_nochex_multiple() {
   	<small>Select the order status once an order has been paid for.</small>
   	</td>
   </tr>
-  <tr><td colspan='2'><br /></td></tr>";
+  ";
   
   
 	$nochex_billing = get_option('nochex_billing');
@@ -506,16 +504,16 @@ function form_nochex_multiple() {
 	
 	$output .= "
   <tr>
-     <td style='padding-bottom: 0px;'>Hide Billing Details:
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>Hide Billing Details:
      </td>
-     <td style='padding-bottom: 0px;'>
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>
        <input type='radio' value='1' name='nochex_billing' id='nochex_billing1' ".$nochex_billing1." /> <label for='nochex_billing1'>".__('Yes', 'wpsc')."</label> &nbsp;
        <input type='radio' value='0' name='nochex_billing' id='nochex_billing2' ".$nochex_billing2." /> <label for='nochex_billing2'>".__('No', 'wpsc')."</label>
 	<br />
   	<small>Billing details will be hidden when a customer is sent to Nochex to pay.</small>
   	</td>
   </tr>
-  <tr><td colspan='2'><br /></td></tr>";
+  ";
   
   
 	$nochex_postage = get_option('nochex_postage');
@@ -535,16 +533,16 @@ function form_nochex_multiple() {
 	
 	$output .= "
   <tr>
-     <td style='padding-bottom: 0px;'>Postage:
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>Postage:
      </td>
-     <td style='padding-bottom: 0px;'>
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>
        <input type='radio' value='1' name='nochex_postage' id='nochex_postage1' ".$nochex_postage1." /> <label for='nochex_postage1'>".__('Yes', 'wpsc')."</label> &nbsp;
        <input type='radio' value='0' name='nochex_postage' id='nochex_postage2' ".$nochex_postage2." /> <label for='nochex_postage2'>".__('No', 'wpsc')."</label>
 	<br />
   	<small>Display Postage on your Nochex Payment Page.</small>
   	</td>
   </tr>
-  <tr><td colspan='2'><br /></td></tr>";
+  ";
   
 	$nochex_xml = get_option('nochex_xml');
 	$nochex_xml1 = "";
@@ -563,16 +561,16 @@ function form_nochex_multiple() {
 	
 	$output .= "
   <tr>
-     <td style='padding-bottom: 0px;'>Product Details Information:
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>Product Details Information:
      </td>
-     <td style='padding-bottom: 0px;'>
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>
        <input type='radio' value='1' name='nochex_xml' id='nochex_xml1' ".$nochex_xml1." /> <label for='nochex_xml1'>".__('Yes', 'wpsc')."</label> &nbsp;
        <input type='radio' value='0' name='nochex_xml' id='nochex_xml2' ".$nochex_xml2." /> <label for='nochex_xml2'>".__('No', 'wpsc')."</label>
 	<br />
   	<small>Display detailed product information on your Nochex payment page.</small>
   	</td>
   </tr>
-  <tr><td colspan='2'><br /></td></tr>";
+  ";
   
   
 	$nochex_test = get_option('nochex_test');
@@ -595,16 +593,16 @@ function form_nochex_multiple() {
   
   
   <tr>
-     <td style='padding-bottom: 0px;'>Test Mode:
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>Test Mode:
      </td>
-     <td style='padding-bottom: 0px;'>
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>
        <input type='radio' value='1' name='nochex_test' id='nochex_test1' ".$nochex_test1." /> <label for='nochex_test1'>".__('Yes', 'wpsc')."</label> &nbsp;
        <input type='radio' value='0' name='nochex_test' id='nochex_test2' ".$nochex_test2." /> <label for='nochex_test2'>".__('No', 'wpsc')."</label>
 	<br />
   	<small>No real money will be received when in test mode.</small>
   	</td>
   </tr>
-  <tr><td colspan='2'><br /></td></tr>";
+  ";
   
   
   $nochex_debug = get_option('nochex_debug');
@@ -624,9 +622,9 @@ function form_nochex_multiple() {
 	
 	$output .= "
   <tr>
-     <td style='padding-bottom: 0px;'>Debug Mode:
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>Debug Mode:
      </td>
-     <td style='padding-bottom: 0px;'>
+     <td style='padding-bottom: 0px;box-shadow:inherit;'>
 	   <input type='radio' value='1' name='nochex_debug' id='nochex_debug2' ".$nochex_debug2." /> <label for='nochex_debug2'>".__('Yes', 'wpsc')."</label> &nbsp;
 	   <input type='radio' value='0' name='nochex_debug' id='nochex_debug1' ".$nochex_debug1." /> <label for='nochex_debug1'>".__('No', 'wpsc')."</label>
 	<br />
@@ -654,9 +652,6 @@ function form_nochex_multiple() {
 		</tr>\n";
 
 		$output .= "    <tr>\n";
-
-
-
 		$output .= "    <td>Select Currency:</td>\n";
 		$output .= "          <td>\n";
 		$output .= "            <select name='nochex_curcode'>\n";
@@ -676,95 +671,6 @@ function form_nochex_multiple() {
 		$output .= "          </td>\n";
 		$output .= "       </tr>\n";
 	}
-
-
-$output .= "
-  <tr class='update_gateway' >
-		<td colspan='2'>
-			<div class='submit'>
-			<input type='submit' value='".__('Update &raquo;', 'wpsc')."' name='updateoption'/>
-		</div>
-		</td>
-	</tr>
-<!--
-	<tr class='firstrowth'>
-		<td style='border-bottom: medium none;' colspan='2'>
-			<strong class='form_group'>Forms Sent to Gateway</strong>
-		</td>
-	</tr>
-
-    <tr>
-      <td>
-      First Name Field
-      </td>
-      <td>
-      <select name='nochex_form[first_name]'>
-      ".nzshpcrt_form_field_list(get_option('nochex_form_first_name'))."
-      </select>
-      </td>
-  </tr>
-    <tr>
-      <td>
-      Last Name Field
-      </td>
-      <td>
-      <select name='nochex_form[last_name]'>
-      ".nzshpcrt_form_field_list(get_option('nochex_form_last_name'))."
-      </select>
-      </td>
-  </tr>
-    <tr>
-      <td>
-      Address Field
-      </td>
-      <td>
-      <select name='nochex_form[address]'>
-      ".nzshpcrt_form_field_list(get_option('nochex_form_address'))."
-      </select>
-      </td>
-  </tr>
-  <tr>
-      <td>
-      City Field
-      </td>
-      <td>
-      <select name='nochex_form[city]'>
-      ".nzshpcrt_form_field_list(get_option('nochex_form_city'))."
-      </select>
-      </td>
-  </tr>
-  <tr>
-      <td>
-      State Field
-      </td>
-      <td>
-      <select name='nochex_form[state]'>
-      ".nzshpcrt_form_field_list(get_option('nochex_form_state'))."
-      </select>
-      </td>
-  </tr>
-  <tr>
-      <td>
-      Postal code/Zip code Field
-      </td>
-      <td>
-      <select name='nochex_form[post_code]'>
-      ".nzshpcrt_form_field_list(get_option('nochex_form_post_code'))."
-      </select>
-      </td>
-  </tr>
-  <tr>
-      <td>
-      Country Field
-      </td>
-      <td>
-      <select name='nochex_form[country]'>
-      ".nzshpcrt_form_field_list(get_option('nochex_form_country'))."
-      </select>
-      </td>
-  </tr>
--->
-  ";
 
   return $output;
 }
